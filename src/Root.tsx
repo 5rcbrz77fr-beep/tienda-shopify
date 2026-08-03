@@ -4,6 +4,10 @@ import { HelloWorld, myCompSchema } from "./HelloWorld";
 import { Logo, myCompSchema2 } from "./HelloWorld/Logo";
 import { Campana, CAMPANA_TOTAL } from "./Campana/Campana";
 import { TEMAS } from "./Campana/scenes";
+import { SquareVideo } from "./Square/SquareVideo";
+import { DURATION_SECONDS } from "./Square/captions";
+
+const SQUARE_FPS = 30;
 
 // Each <Composition> is an entry in the sidebar!
 
@@ -18,6 +22,16 @@ export const RemotionRoot: React.FC = () => {
         fps={30}
         width={1080}
         height={1920}
+      />
+
+      {/* Video CUADRADO 1:1 para YouTube — narración + subtítulos karaoke */}
+      <Composition
+        id="Cuadrado-YouTube"
+        component={SquareVideo}
+        durationInFrames={Math.ceil(DURATION_SECONDS * SQUARE_FPS) + 30}
+        fps={SQUARE_FPS}
+        width={1080}
+        height={1080}
       />
 
       {/* Clips independientes, uno por párrafo del guión */}
