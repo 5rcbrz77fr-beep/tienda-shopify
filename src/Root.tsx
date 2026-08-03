@@ -6,6 +6,7 @@ import { Campana, CAMPANA_TOTAL } from "./Campana/Campana";
 import { TEMAS } from "./Campana/scenes";
 import { SquareVideo } from "./Square/SquareVideo";
 import { DURATION_SECONDS } from "./Square/captions";
+import { TEMAS_E } from "./Estrategia/scenes";
 
 const SQUARE_FPS = 30;
 
@@ -34,8 +35,21 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
       />
 
-      {/* Clips independientes, uno por párrafo del guión */}
+      {/* Clips independientes, uno por párrafo del guión (guión 1) */}
       {TEMAS.map((t) => (
+        <Composition
+          key={t.id}
+          id={t.id}
+          component={t.Clip}
+          durationInFrames={t.durationInFrames}
+          fps={30}
+          width={1080}
+          height={1920}
+        />
+      ))}
+
+      {/* Clips del guión 2 — Estrategia + IA (más gráficos, slow-motion) */}
+      {TEMAS_E.map((t) => (
         <Composition
           key={t.id}
           id={t.id}

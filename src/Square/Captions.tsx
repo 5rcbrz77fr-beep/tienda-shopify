@@ -58,7 +58,6 @@ const Line: React.FC<{ line: CapLine; t: number }> = ({ line, t }) => {
             style={{
               color,
               transform: active ? "scale(1.06)" : "scale(1)",
-              transition: "none",
               textShadow: active ? `0 0 26px ${COLORS.accent}88` : "none",
             }}
           >
