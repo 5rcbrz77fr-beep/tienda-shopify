@@ -8,3 +8,6 @@ out
 
 # Archivos de trabajo (transcripción, wav)
 scratch
+
+# Logs temporales de ffmpeg (two-pass)
+ffmpeg2pass-*
