@@ -9,6 +9,7 @@ import { DURATION_SECONDS } from "./Square/captions";
 import { TEMAS_E } from "./Estrategia/scenes";
 import { TEMAS_C } from "./Comunicacion/scenes";
 import { TEMAS_D } from "./Dispersa/scenes";
+import { TEMAS_DYN } from "./Dinamico/scenes";
 
 const SQUARE_FPS = 30;
 
@@ -78,6 +79,19 @@ export const RemotionRoot: React.FC = () => {
 
       {/* Clips del guión 4 — Comunicación dispersa (5 clips premium) */}
       {TEMAS_D.map((t) => (
+        <Composition
+          key={t.id}
+          id={t.id}
+          component={t.Clip}
+          durationInFrames={t.durationInFrames}
+          fps={30}
+          width={1080}
+          height={1920}
+        />
+      ))}
+
+      {/* Estilo DINÁMICO — casi sin texto, pura animación en movimiento */}
+      {TEMAS_DYN.map((t) => (
         <Composition
           key={t.id}
           id={t.id}
