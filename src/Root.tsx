@@ -10,6 +10,7 @@ import { TEMAS_E } from "./Estrategia/scenes";
 import { TEMAS_C } from "./Comunicacion/scenes";
 import { TEMAS_D } from "./Dispersa/scenes";
 import { TEMAS_DYN } from "./Dinamico/scenes";
+import { CleanSorting } from "./Limpio/Clean";
 
 const SQUARE_FPS = 30;
 
@@ -89,6 +90,16 @@ export const RemotionRoot: React.FC = () => {
           height={1920}
         />
       ))}
+
+      {/* Estilo LIMPIO — composición equilibrada (muestra para validar) */}
+      <Composition
+        id="LIMPIO-Clasifica"
+        component={CleanSorting}
+        durationInFrames={300}
+        fps={30}
+        width={1080}
+        height={1920}
+      />
 
       {/* Estilo DINÁMICO — casi sin texto, pura animación en movimiento */}
       {TEMAS_DYN.map((t) => (
