@@ -12,6 +12,7 @@ import { TEMAS_D } from "./Dispersa/scenes";
 import { TEMAS_DYN } from "./Dinamico/scenes";
 import { CleanSorting } from "./Limpio/Clean";
 import { TEMAS_W } from "./Limpio/whatsapp";
+import { TEMAS_V } from "./Limpio/mensaje";
 
 const SQUARE_FPS = 30;
 
@@ -104,6 +105,19 @@ export const RemotionRoot: React.FC = () => {
 
       {/* Guión WhatsApp — estilo LIMPIO equilibrado (5 clips) */}
       {TEMAS_W.map((t) => (
+        <Composition
+          key={t.id}
+          id={t.id}
+          component={t.Clip}
+          durationInFrames={t.durationInFrames}
+          fps={30}
+          width={1080}
+          height={1920}
+        />
+      ))}
+
+      {/* Guión Matriz de Mensajes — estilo LIMPIO equilibrado (5 clips) */}
+      {TEMAS_V.map((t) => (
         <Composition
           key={t.id}
           id={t.id}
