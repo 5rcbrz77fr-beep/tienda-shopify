@@ -7,7 +7,7 @@ import {
 import { FONT } from "../Campana/theme";
 
 // Paleta limpia y sobria (más premium, menos ruido)
-const C = {
+export const C = {
   bgTop: "#0b1020",
   bgMid: "#0e1530",
   bgBot: "#070a16",
@@ -20,7 +20,7 @@ const C = {
 };
 
 // Fondo calmado: gradiente + glow central + viñeta. Sin puntos de colores.
-const CleanBg: React.FC = () => {
+export const CleanBg: React.FC = () => {
   const frame = useCurrentFrame();
   const breathe = (1 + Math.sin(frame * 0.03)) / 2;
   return (
@@ -37,12 +37,13 @@ const CleanBg: React.FC = () => {
 };
 
 // Marco con zonas balanceadas: eyebrow arriba, héroe al centro óptico, palabra abajo.
-const Frame: React.FC<{
+export const Frame: React.FC<{
   eyebrow: string;
   word: string;
   wordColor?: string;
+  wordSize?: number;
   children: React.ReactNode;
-}> = ({ eyebrow, word, wordColor = C.ink, children }) => {
+}> = ({ eyebrow, word, wordColor = C.ink, wordSize = 78, children }) => {
   const frame = useCurrentFrame();
   const ea = interpolate(frame, [6, 24], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const wa = interpolate(frame, [40, 60], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
@@ -62,15 +63,15 @@ const Frame: React.FC<{
       {/* Palabra abajo, con ancla */}
       <div style={{ position: "absolute", bottom: 320, left: 0, right: 0, textAlign: "center", opacity: wa, transform: `translateY(${wy}px)` }}>
         <div style={{ width: 60, height: 3, background: wordColor, margin: "0 auto 30px", borderRadius: 2, opacity: 0.8 }} />
-        <div style={{ fontFamily: FONT, fontSize: 82, fontWeight: 800, letterSpacing: "-0.01em", color: wordColor }}>{word}</div>
+        <div style={{ fontFamily: FONT, fontSize: wordSize, fontWeight: 800, letterSpacing: "-0.01em", color: wordColor, maxWidth: 900, margin: "0 auto", lineHeight: 1.06, padding: "0 40px" }}>{word}</div>
       </div>
     </AbsoluteFill>
   );
 };
 
-const loop = (f: number, p: number) => (((f % p) + p) / p) % 1;
-const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-const easeInOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+export const loop = (f: number, p: number) => (((f % p) + p) / p) % 1;
+export const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+export const easeInOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
 
 // HÉROE: clasificador limpio y simétrico (entrada -> IA -> 3 destinos).
 const SortingClean: React.FC = () => {
