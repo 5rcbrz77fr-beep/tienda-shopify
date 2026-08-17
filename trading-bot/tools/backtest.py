@@ -16,20 +16,48 @@ from bot.strategy import evaluate_day
 from bot.manage import simulate
 
 
-def load_csv(path: str) -> pd.DataFrame:
-    df = pd.read_csv(path)
-    df.columns = [c.lower() for c in df.columns]
-    t = df["time"]
-    if pd.api.types.is_numeric_dtype(t):
-        df["time"] = pd.to_datetime(t, unit="s", utc=True)
+def load_csv(path: str, tz_offset_hours: float = 0.0) -> pd.DataFrame:
+    """
+    Acepta varios formatos:
+      - Mi formato:      time,open,high,low,close   (time epoch o ISO)
+      - Export de MT5:   <DATE> <TIME> <OPEN> <HIGH> <LOW> <CLOSE> ...  (tab)
+      - TradingView:     time/Date, open, high, low, close
+    tz_offset_hours: offset del reloj del CSV respecto a UTC real. Los datos de
+      MT5 vienen en hora del SERVIDOR del broker (ej. GMT+2 => tz_offset_hours=2);
+      se restan para llevar a UTC real (necesario para anclar a NY).
+    """
+    # detectar separador (coma, tab o ;)
+    df = pd.read_csv(path, sep=None, engine="python")
+    df.columns = [c.strip().strip("<>").lower() for c in df.columns]
+
+    if "date" in df.columns and "time" in df.columns:
+        ts = pd.to_datetime(df["date"].astype(str) + " " + df["time"].astype(str),
+                             utc=True, errors="coerce")
     else:
-        df["time"] = pd.to_datetime(t, utc=True)
-    return df[["time", "open", "high", "low", "close"]].sort_values("time").reset_index(drop=True)
+        col = "time" if "time" in df.columns else df.columns[0]
+        t = df[col]
+        if pd.api.types.is_numeric_dtype(t):
+            ts = pd.to_datetime(t, unit="s", utc=True)
+        else:
+            ts = pd.to_datetime(t, utc=True, errors="coerce")
+
+    # llevar de hora del broker a UTC real
+    if tz_offset_hours:
+        ts = ts - pd.to_timedelta(tz_offset_hours, unit="h")
+
+    out = pd.DataFrame({
+        "time": ts,
+        "open": pd.to_numeric(df["open"], errors="coerce"),
+        "high": pd.to_numeric(df["high"], errors="coerce"),
+        "low": pd.to_numeric(df["low"], errors="coerce"),
+        "close": pd.to_numeric(df["close"], errors="coerce"),
+    }).dropna().sort_values("time").reset_index(drop=True)
+    return out
 
 
 def run(csv: str, symbol: str, pip: float, atr_period: int, atr_mult: float,
-        atr_method: str, min_pips: float):
-    df = load_csv(csv)
+        atr_method: str, min_pips: float, tz_offset: float = 0.0):
+    df = load_csv(csv, tz_offset_hours=tz_offset)
     atr = AtrStop(period=atr_period, mult=atr_mult, method=atr_method)
 
     ny_dates = sorted({ts.tz_convert(NY).date() for ts in df["time"]})
@@ -71,5 +99,7 @@ if __name__ == "__main__":
     p.add_argument("--atr-mult", type=float, default=1.25)
     p.add_argument("--atr-method", default="sma", choices=["sma", "wilder"])
     p.add_argument("--min-pips", type=float, default=8.0)
+    p.add_argument("--tz-offset", type=float, default=0.0,
+                   help="offset horario del CSV vs UTC (MT5 broker suele ser 2 o 3)")
     a = p.parse_args()
-    run(a.csv, a.symbol, a.pip, a.atr_period, a.atr_mult, a.atr_method, a.min_pips)
+    run(a.csv, a.symbol, a.pip, a.atr_period, a.atr_mult, a.atr_method, a.min_pips, a.tz_offset)
