@@ -3,3 +3,6 @@ __pycache__/
 *.pyc
 venv/
 *.csv
+
+# excepcion: si guardamos el benchmark de referencia
+!data/benchmark_2021_2025.csv
