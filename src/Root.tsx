@@ -14,6 +14,7 @@ import { CleanSorting } from "./Limpio/Clean";
 import { TEMAS_W } from "./Limpio/whatsapp";
 import { TEMAS_V } from "./Limpio/mensaje";
 import { TEMAS_H } from "./Limpio/territorio";
+import { TEMAS_EMP } from "./Limpio/empresa";
 
 const SQUARE_FPS = 30;
 
@@ -132,6 +133,19 @@ export const RemotionRoot: React.FC = () => {
 
       {/* Guión Mapa de Calor / Territorio — estilo LIMPIO equilibrado (5 clips) */}
       {TEMAS_H.map((t) => (
+        <Composition
+          key={t.id}
+          id={t.id}
+          component={t.Clip}
+          durationInFrames={t.durationInFrames}
+          fps={30}
+          width={1080}
+          height={1920}
+        />
+      ))}
+
+      {/* Guión Estrategia de IA para Empresas — estilo LIMPIO equilibrado (6 clips) */}
+      {TEMAS_EMP.map((t) => (
         <Composition
           key={t.id}
           id={t.id}
