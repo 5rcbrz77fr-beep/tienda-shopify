@@ -16,6 +16,7 @@ import { TEMAS_V } from "./Limpio/mensaje";
 import { TEMAS_H } from "./Limpio/territorio";
 import { TEMAS_EMP } from "./Limpio/empresa";
 import { TEMAS_DOC } from "./Limpio/documental";
+import { TEMAS_FD } from "./Limpio/forward";
 
 const SQUARE_FPS = 30;
 
@@ -160,6 +161,19 @@ export const RemotionRoot: React.FC = () => {
 
       {/* Guión Gestión Documental con IA — estilo LIMPIO equilibrado (6 clips) */}
       {TEMAS_DOC.map((t) => (
+        <Composition
+          key={t.id}
+          id={t.id}
+          component={t.Clip}
+          durationInFrames={t.durationInFrames}
+          fps={30}
+          width={1080}
+          height={1920}
+        />
+      ))}
+
+      {/* Guión Forward Deploy (CRM a tu medida) — estilo LIMPIO equilibrado (6 clips) */}
+      {TEMAS_FD.map((t) => (
         <Composition
           key={t.id}
           id={t.id}
